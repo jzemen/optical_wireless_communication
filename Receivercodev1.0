@@ -1,0 +1,36 @@
+import time
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(18, GPIO.IN)
+link = 0
+m = list("00000000")
+w = []
+
+while len(w) in range(0,5):
+    count = 0
+    while count in range(0,7):
+        input_value = GPIO.input(18)
+        if input_value == 0:
+            link += 1
+        if link == 0:
+            print("no signal")
+        else:
+            input_value = GPIO.input(18)
+            m[count] = input_value
+            print(count)
+            count += 1
+            time.sleep(1)
+    #print(m)
+    strm = ''.join(str(e) for e in m)
+    #print(strm)
+    n = int(strm, 2)
+    #print(n)
+    a = chr(n)
+    #print(a)
+    w.append(a)
+
+word = ''.join(w)
+print(word)
+GPIO.cleanup()
+    
