@@ -1,0 +1,15 @@
+from time import sleep
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(18, GPIO.IN)
+
+while True:
+  if GPIO.input(18) == False:
+    print("0")
+  else:
+    print("1")
+    
+GPIO.cleanup()
+
+
