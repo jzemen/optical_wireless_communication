@@ -58,7 +58,8 @@ while True:
                     letter.append(0)
                 if abs(x-long) < 0.01:
                     letter.append(1)
-                translate(letter)                
+                translate(letter)
+                letter = []
 
     
 
