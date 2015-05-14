@@ -16,6 +16,13 @@ letter = []
 long = 0.12
 short = 0.01
 
+def translate(letter):
+    bl = ''.join(str(y) for y in letter)
+    chunks = [bl[8*i:8*(i+1)] for i in range(len(bl)//8)]
+    ints=[int(x,2) for x in chunks]
+    chars = [chr(x) for x in ints]
+    print(''.join(chars))
+
 while True:
     if GPIO.input(7) == False:
         print("no signal")
@@ -38,28 +45,20 @@ while True:
             som = 1
             current = stop-start
             print("message started")
-        if abs(stop-start-4)<0.5 :
-            print("end of message")
-            som = 0
         if stop-start != current:
             current = stop-start
             #print(current)
             if som == 1:
             periods.append(current)                
-                
-for x in periods:
-    if abs(x-short) < 0.01:
-        letter.append(0)
-    if abs(x-long) < 0.01:
-        letter.append(1)
-
-else:
-    bl = ''.join(str(y) for y in letter)
-    chunks = [bl[8*i:8*(i+1)] for i in range(len(bl)//8)]
-    ints=[int(x,2) for x in chunks]
-    chars = [chr(x) for x in ints]
-    print(''.join(chars))
-
+        if abs(stop-start-4)<0.5 :
+            print("end of message")
+            som = 0        
+            for x in periods:
+                if abs(x-short) < 0.01:
+                    letter.append(0)
+                if abs(x-long) < 0.01:
+                    letter.append(1)
+                translate(letter)                
 
     
 
