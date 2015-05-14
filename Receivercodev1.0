@@ -44,6 +44,7 @@ while True:
             current = stop-start
             #print(current)
             if som == 1:
+            
                 periods.append(current)                
                 
 for x in periods:
