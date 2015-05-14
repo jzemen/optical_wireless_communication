@@ -1,0 +1,72 @@
+from time import sleep
+import time
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(7, GPIO.IN)
+current = 0
+som = 0
+start = 0
+stop = 0
+state = 0
+shortpulse = 0
+longpulse = 0
+periods = []
+letter = []
+long = 0.12
+short = 0.01
+
+while True:
+    if GPIO.input(7) == False:
+        print("no signal")
+    else:
+        break
+
+while True:
+    if GPIO.input(7) == True:
+        if state == 0:
+            start = time.time()
+            state = 1
+
+    if GPIO.input(7) == False:
+        if state == 1:
+            stop = time.time()
+            state = 0
+
+    if stop-start> 0.0001 and stop-start<100:
+        if abs(stop-start-6)<0.5 :
+            som = 1
+            print("message started")
+        if abs(stop-start-4)<0.5 :
+            print("end of message")
+            break
+        if stop-start != current:
+            current = stop-start
+            #print(current)
+            if som == 1:
+            
+                periods.append(current)                
+                
+for x in periods:
+    if abs(x-short) < 0.01:
+        letter.append(0)
+    if abs(x-long) < 0.01:
+        letter.append(1)
+
+else:
+    bl = ''.join(str(y) for y in letter)
+    chunks = [bl[8*i:8*(i+1)] for i in range(len(bl)//8)]
+    ints=[int(x,2) for x in chunks]
+    chars = [chr(x) for x in ints]
+    print(''.join(chars))
+
+
+    
+
+
+
+
+
+
+        
+
