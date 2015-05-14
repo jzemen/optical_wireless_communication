@@ -36,16 +36,16 @@ while True:
     if stop-start> 0.0001 and stop-start<100:
         if abs(stop-start-6)<0.5 :
             som = 1
+            current = stop-start
             print("message started")
         if abs(stop-start-4)<0.5 :
             print("end of message")
-            break
+            som = 0
         if stop-start != current:
             current = stop-start
             #print(current)
             if som == 1:
-            
-                periods.append(current)                
+            periods.append(current)                
                 
 for x in periods:
     if abs(x-short) < 0.01:
