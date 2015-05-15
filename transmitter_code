@@ -1,0 +1,45 @@
+import RPi.GPIO as GPIO
+import time
+
+GPIO.cleanup()
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(16, GPIO.OUT)
+
+start = 1.0
+off_time = 0.02
+short = 0.04
+long = 0.12
+end = 0.5
+tweet = "Have a nice weekend Mr Bell!" #This is the message we want to send!
+
+def inputter(input_string, short, long, off_time):
+    '''
+    This turns the laser on and off like morse code.
+    Inputs:
+    input_string - a binary string containing the message to be sent.
+    short - the length of a short pulse (a dot)
+    long - the length of a long pulse (a dash)
+    off_time - how long to turn the laser off between pulses. 
+    '''
+
+    for bit in input_string:
+        if bit == '1':
+            beep(long)
+        elif bit == '0':
+            beep(short)
+        else:
+            raise ValueError("bit is {0}".format(bit))    
+
+def beep(pulse):
+    GPIO.output(16,1)    #Turn laser on.
+    time.sleep(pulse)    #Pulse duration.
+    GPIO.output(16, 0)   #Turn laser off. 
+    time.sleep(off_time)
+
+message = "".join(format(ord(letter), 'b').zfill(8) for letter in tweet)
+print(message) #every letter>int>binary string & pad msg out to 1 byte per character.
+
+while True:
+    beep(start) #Special extra long start beep.
+    inputter(message,short, long, off_time)
+    beep(end)
