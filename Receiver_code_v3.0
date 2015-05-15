@@ -1,0 +1,86 @@
+from time import sleep
+import time
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(7, GPIO.IN)
+current = 0
+som = 0
+start = 0
+stop = 0
+state = False
+pulse_times = []
+letter = []
+long = 0.0012
+short = 0.004
+
+def translate(pulse_times):
+    """
+    Translates pulse_times list into words
+    """
+    for x in pulse_times:
+        if abs(x-short) < 0.0001:
+            letter.append(0)
+        if abs(x-long) < 0.0001:
+            letter.append(1)
+        bl = ''.join(str(y) for y in letter)
+        chunks = [bl[8*i:8*(i+1)] for i in range(len(bl)//8)]
+        ints=[int(x,2) for x in chunks]
+        chars = [chr(x) for x in ints]
+        print(''.join(chars))
+
+def receive():
+    pulse_times = []
+    while not GPIO.input(7):
+            print("no signal")
+
+    t0 = time.clock()
+    while GPIO.input(7):
+        pass
+    t1 = time.clock()
+    pulse_times.append(t1)
+    
+
+#THIS IS STILL NOWHERE NEAR FINISHED, BUT THE GENERAL PRINCIPLE IS TO
+#GET AS MUCH STUFF OUT OF OUR WHILE LOOPS TO REDUCE THE VARIANCE OF THE TIMING. 
+
+while not GPIO.input(7):
+    print("no signal")
+
+while True:
+    if GPIO.input(7) and not state: #Getting signal and think we aren't?
+            start = time.clock()
+            state = True
+
+    if not GPIO.input(7) and state: #Not getting signal and think we are?
+            stop = time.clock()
+            state = False
+
+    if stop-start> 0.000001 and stop-start<1:
+        if abs(stop-start-0.06)<0.005 :
+            som = 1
+            print("message started")
+        if abs(stop-start-0.04)<0.005 :
+            print("end of message")
+            som = 0
+            translate(pulse_times)
+            pulse_times = []
+        
+        current = stop-start
+        print(current)
+        if som == 1 and current < 0.038:
+            pulse_times.append(current)                
+
+
+
+
+
+    
+
+
+
+
+
+
+        
+
