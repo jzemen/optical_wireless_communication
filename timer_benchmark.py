@@ -59,7 +59,7 @@ print('method d is finished.')
 #and we're going to use pickle to save this data and make graphs etc.
 # simply unpickle, then use plot.hist() for each dataset.
 
-fid = open('comparing_time2e3.pkl'.'wb') #CHANGE PICKLE FILE NAME BETWEEN SETS = range*snooze!
+fid = open('comparing_time2e3.pkl','wb') #CHANGE PICKLE FILE NAME BETWEEN SETS = range*snooze!
 pickle.dump(a, fid)
 pickle.dump(b, fid)
 pickle.dump(c, fid)
